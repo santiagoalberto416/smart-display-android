@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/imgView"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/default_profie"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/buttonLoadPicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="0"
+        android:onClick="loadImagefromGallery"
+        android:text="Load Picture" >
+    </Button>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:id="@+id/registerUser"
+        android:tint="@android:color/white"
+        android:onClick="loadImagefromGallery"
+        android:layout_toRightOf="@id/imgView"
+        android:layout_below="@id/imgView"
+        android:layout_marginLeft="-40dp"
+        android:layout_marginTop="-60dp"
+        android:src="@drawable/ic_add_black_36dp"
+        app:layout_anchorGravity="bottom|right|end"/>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:onClick="uploadImage"
+        android:text="Upload" />
+
+</RelativeLayout>
