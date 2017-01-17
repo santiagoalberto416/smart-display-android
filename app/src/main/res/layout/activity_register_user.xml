@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorAccent"
     android:orientation="vertical">
 
 
@@ -15,31 +16,86 @@
         android:src="@drawable/default_profie"
         android:layout_centerHorizontal="true"/>
 
-    <Button
-        android:id="@+id/buttonLoadPicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="0"
-        android:onClick="loadImagefromGallery"
-        android:text="Load Picture" >
-    </Button>
-
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:id="@+id/registerUser"
         android:tint="@android:color/white"
-        android:onClick="loadImagefromGallery"
+        app:backgroundTint="@color/colorPrimary"
+        android:layout_below="@+id/imgView"
         android:layout_toRightOf="@id/imgView"
-        android:layout_below="@id/imgView"
-        android:layout_marginLeft="-40dp"
-        android:layout_marginTop="-60dp"
         android:src="@drawable/ic_add_black_36dp"
-        app:layout_anchorGravity="bottom|right|end"/>
+        app:layout_anchorGravity="bottom|right|end"
+        android:onClick="loadImagefromGallery"
+        android:layout_marginLeft="-30dp"
+        android:layout_marginTop="-40dp"
+        android:layout_marginRight="40dp"/>
+
+    <android.support.design.widget.TextInputLayout
+        style="@style/elementOfLogin"
+        android:layout_below="@+id/imgView"
+        android:id="@+id/firstName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <AutoCompleteTextView
+            android:id="@+id/firstNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#FFF"
+            android:hint="@string/first_name"
+            android:textColor="#FFF"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        style="@style/elementOfLogin"
+        android:layout_below="@+id/firstName"
+        android:id="@+id/registerLastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <AutoCompleteTextView
+            android:id="@+id/lastNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#FFF"
+            android:hint="@string/last_name"
+            android:textColor="#FFF"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        style="@style/elementOfLogin"
+        android:layout_below="@+id/registerLastName"
+        android:id="@+id/registerPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:passwordToggleTint="#FFF">
+
+        <AutoCompleteTextView
+            android:id="@+id/passwordText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#FFF"
+            android:hint="@string/password"
+            android:textColor="#FFF"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+    </android.support.design.widget.TextInputLayout>
+
 
     <Button
+        android:layout_alignParentBottom="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"

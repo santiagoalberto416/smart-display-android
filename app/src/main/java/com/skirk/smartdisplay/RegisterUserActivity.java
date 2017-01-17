@@ -41,9 +41,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Field;
 
-public class RegisterUserActivity extends Activity {
+public class RegisterUserActivity extends AppCompatActivity {
 
     ProgressDialog prgDialog;
     String encodedString;
@@ -82,12 +81,15 @@ public class RegisterUserActivity extends Activity {
             } else {
 
                 // No explanation needed, we can request the permission.
+
+
+
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
                 // result of the request.
             }
         }
-        // Trailing slash is needed
+
     }
 
     public void createUser(String firstname, String lastname, String image, String password, String email){
