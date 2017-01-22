@@ -8,7 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.skirk.smartdisplay.MainActivity">
+    tools:context="com.skirk.smartdisplay.MainActivity"
+    android:background="@color/colorPrimaryDark">
 
     <TextView
         android:id="@+id/label1"
@@ -44,4 +45,23 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="-115.5"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:layout_centerInParent="true"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+           android:layout_alignParentBottom="true"
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.Large.DoubleBounce"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/colorAccent" />
+
+    </RelativeLayout>
+
+
 </RelativeLayout>
