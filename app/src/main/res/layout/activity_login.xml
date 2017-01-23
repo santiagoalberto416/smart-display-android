@@ -115,6 +115,7 @@
             </RelativeLayout>
 
             <View
+                android:id="@+id/decorativeView"
                 android:rotation="20"
                 android:layout_width="800dp"
                 android:layout_height="220dp"

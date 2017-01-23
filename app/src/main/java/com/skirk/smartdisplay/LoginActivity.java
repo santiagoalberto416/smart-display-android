@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
+    private View decorativeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         view.bringToFront();
         view.getParent().requestLayout();
+        decorativeView = findViewById(R.id.decorativeView);
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            // only for gingerbread and newer versions
+            decorativeView.setVisibility(View.GONE);
+        }
 
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);

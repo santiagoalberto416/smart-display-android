@@ -21,6 +21,7 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -53,6 +54,10 @@ public class RegisterUserActivity extends AppCompatActivity {
     final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1212;
     public static final String BASE_URL = "https://smart-displays-santy-ruler.c9users.io/Proyecto8B/classes/";
 
+
+    public AutoCompleteTextView firstName;
+    public AutoCompleteTextView lastName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +66,8 @@ public class RegisterUserActivity extends AppCompatActivity {
         // Set Cancelable as False
         prgDialog.setCancelable(false);
 
+        firstName = (AutoCompleteTextView)findViewById(R.id.firstName);
+        lastName = (AutoCompleteTextView)findViewById(R.id.lastNameText);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
