@@ -59,7 +59,9 @@
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:nextFocusDown="@+id/password"
                     android:textColorHint="#FFF"
+                    android:text="skirk@gmail.com"
                     android:hint="@string/prompt_email"
                     android:textColor="#FFF"
                     android:inputType="textEmailAddress"
@@ -74,7 +76,7 @@
                 android:id="@+id/passwordContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleEnabled="true"
+                app:passwordToggleEnabled="false"
                 android:elevation="1dp"
                 app:passwordToggleTint="#FFF">
 
@@ -83,6 +85,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
+                    android:text="megamanx8"
                     android:textColor="#FFF"
                     android:textColorHint="#FFF"
                     android:imeActionId="@+id/login"
@@ -116,6 +119,7 @@
 
             <View
                 android:id="@+id/decorativeView"
+                android:visibility="gone"
                 android:rotation="20"
                 android:layout_width="800dp"
                 android:layout_height="220dp"
