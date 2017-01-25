@@ -24,7 +24,7 @@ public class UserResponse {
     @SerializedName("image")
     @Expose
     private String image;
-    @SerializedName("email")
+    @SerializedName("editEmail")
     @Expose
     private String email;
 

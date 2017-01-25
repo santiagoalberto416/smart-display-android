@@ -4,12 +4,57 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.skirk.smartdisplay.MainActivity"
     android:background="@color/colorPrimaryDark">
+    <!--
+    imageUser
+    userNameComplete
+    email
+    -->
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/imageUser"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginLeft="16dp"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/userNameComplete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:textSize="20sp"
+            android:text="Santiago Kirk"
+            android:layout_toRightOf="@id/imageUser"/>
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/secondary_text_dark"
+            android:layout_below="@id/userNameComplete"
+            android:layout_marginLeft="16dp"
+            android:textSize="16sp"
+            android:text="Santiago Kirk"
+            android:layout_toRightOf="@id/imageUser"/>
+
+    </RelativeLayout>
+    
+    
+    
+    
+    <RelativeLayout
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/label1"
@@ -46,20 +91,43 @@
         android:layout_margin="16dp"
         android:text="-115.5"/>
 
+    </RelativeLayout>
+
     <RelativeLayout
+        android:layout_below="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="fill_parent">
 
         <com.github.ybq.android.spinkit.SpinKitView
-            android:layout_centerInParent="true"
+
             xmlns:app="http://schemas.android.com/apk/res-auto"
-           android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             android:id="@+id/spin_kit"
             style="@style/SpinKitView.Large.DoubleBounce"
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
             android:layout_gravity="center"
             app:SpinKit_Color="@color/colorAccent" />
+
+            <TextView
+                android:id="@+id/screensNear"
+                android:layout_margin="16dp"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFF"
+                android:text="Buscando Smart Displays"
+                android:layout_below="@id/spin_kit"/>
+
+            <TextView
+                android:id="@+id/distance"
+                android:layout_margin="16dp"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFF"
+                android:text="Buscando Smart Displays"
+                android:layout_below="@id/screensNear"/>
 
     </RelativeLayout>
 

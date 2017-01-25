@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="620dp"
+    android:layout_height="550dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorAccent"
     android:orientation="vertical">
 
-
-
-
-
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:layout_marginTop="26dp"
             android:layout_centerHorizontal="true"
             android:id="@+id/imgView"
@@ -127,15 +128,16 @@
 
 
     <Button
-        android:layout_margin="16dp"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/password"
+        android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/button_login_shape_register"
-        android:layout_marginBottom="20dp"
-        android:onClick="uploadImage"
+        android:layout_marginBottom="60dp"
+        android:onClick="checkValues"
         android:textColor="@android:color/white"
         android:text="Upload" />
 
 </RelativeLayout>
+</ScrollView>

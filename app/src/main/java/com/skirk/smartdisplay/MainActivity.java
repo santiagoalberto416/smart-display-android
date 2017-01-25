@@ -1,5 +1,6 @@
 package com.skirk.smartdisplay;
 
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -13,9 +14,14 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.skirk.smartdisplay.POJO.SmartLocation;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +37,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,19 +45,11 @@ import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 
 import static com.skirk.smartdisplay.LoginActivity.readStream;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
 
 public class MainActivity extends AppCompatActivity{
-
-    TextView latitude;
-    TextView longittude;
-    Location location;
-    LocationTask locationTask = null;
-
-    List<SmartLocation> smartLocations = new ArrayList<>();
-    private String firstName = "";
-    private String lastName = "";
-    private String imageFile = "";
-    private int idUser = 0;
 
     // The minimum distance to change Updates in meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 10 meters
@@ -58,6 +57,39 @@ public class MainActivity extends AppCompatActivity{
     // The minimum time between updates in milliseconds
     private static final long MIN_TIME_BW_UPDATES = 1; // 1 minute
 
+    private static final String SOCKET_URL = "https://croissant-santy-ruler.c9users.io:8081";
+
+    TextView latitude;
+    TextView longittude;
+    Location location;
+    LocationTask locationTask = null;
+
+    List<SmartLocation> smartLocations = new ArrayList<>();
+    private List<Integer> idSmartAlready = new ArrayList<>();
+
+    private String firstName = "";
+    private String lastName = "";
+    private String imageFile = "";
+    private String email = "";
+    private int idUser = 0;
+
+    private TextView txtfullName;
+    private TextView txtEmail;
+    private ImageView imageOfUser;
+    private TextView screensNear;
+    private TextView distance;
+
+    private Socket mSocket;
+    {
+        try {
+            mSocket = IO.socket(SOCKET_URL);
+        } catch (URISyntaxException e) {
+            Log.d("Message", e.getMessage());
+        }
+    }
+
+
+    private LocationManager locationManager = null;
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(final Location location) {
@@ -65,55 +97,108 @@ public class MainActivity extends AppCompatActivity{
 
             Log.d("--this location", location.getLatitude()+","+location.getLongitude());
             if(smartLocations.size()>0){
+                int screensNear = 0;
                 for(SmartLocation i : smartLocations){
                     float distanceInMeters = i.getLocation().distanceTo(location);
                     Log.d("--Location", i.toString());
                     Log.d("-Distance to", distanceInMeters+" ");
+
+                    if(distanceInMeters<=10 && !idSmartAlready.contains(i.getId())){
+                        idSmartAlready.add(i.getId());
+                        String imageJson = "{" +
+                                "\"firstname\": \""+firstName+" "+lastName+"\"," +
+                                "\"imageurl\": \""+idUser+".jpg\"}";
+                        mSocket.emit("showUserImage", imageJson);
+                        makeNotification();
+                        makeDialog();
+                    }else if(distanceInMeters<=10){
+                        mSocket.emit("removeAction", "{\"locationid\": "+i.getId()+"}");
+                        distance.setText(distanceInMeters+"");
+                        screensNear = screensNear + 1;
+                    }
+
                 }
+                if(screensNear>0) {
+                    MainActivity.this.screensNear.setText("Tienes " + screensNear + " SmartScreen(s) cerca");
+                }else {
+                    MainActivity.this.screensNear.setText("Buscando Smart Displays");
+                }
+                /// put screens near
+
             }
 
-            /*
-            if(distanceInMeters<10){
-                Notification n  = new Notification.Builder(MainActivity.this)
-                        .setContentTitle("New mail from " + "test@gmail.com")
-                        .setContentText("Subject")
-                        .setSmallIcon(R.drawable.new_business)
-                        .setAutoCancel(true).build();
-                NotificationManager notificationManager =
-                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.notify(0, n);
-            }
-            */
-
-            // here i must a notification and notify to plataform of my existence
-            // and in the response get some points
-            // add table of points
 
         }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras){
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider){
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider){
+
+        }
+
+        public void makeNotification(){
+            Notification n  = new Notification.Builder(MainActivity.this)
+                    .setContentTitle("New mail from " + "test@gmail.com")
+                    .setContentText("Subject")
+                    .setSmallIcon(R.drawable.ic_location_on_black_48dp)
+                    .setAutoCancel(true).build();
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(0, n);
+        }
+
+        public void makeDialog(){
+            final Dialog dialog = new Dialog(MainActivity.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.custom_dialog);
+            dialog.setTitle("Title...");
+            Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+            // if button is clicked, close the custom dialog
+            dialogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }
     };
-
-    private LocationManager locationManager = null;
-
-
-    //32.52239916
-    //32.52239699
-    //32.5223972
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mSocket.connect();
+
+        txtfullName = (TextView) findViewById(R.id.userNameComplete);
+        txtEmail = (TextView) findViewById(R.id.email);
+        imageOfUser = (ImageView) findViewById(R.id.imageUser);
+        screensNear = (TextView) findViewById(R.id.screensNear);
+        distance = (TextView) findViewById(R.id.distance);
 
         // get user from previous activity
-        idUser = getIntent().getIntExtra("id", 0);
+        idUser = getIntent().getIntExtra("idUser", 0);
         imageFile = getIntent().getStringExtra("image");
         firstName = getIntent().getStringExtra("first");
         lastName = getIntent().getStringExtra("last");
+        email = getIntent().getStringExtra("email");
 
+        txtfullName.setText(firstName + " " +lastName);
+        txtEmail.setText(email);
+
+        Picasso.with(this).load(LoginActivity.URL_SERVER+"user-images/"+idUser+".jpg").into(imageOfUser);
 
         location = new Location("");
-        //32.52239863, -117.01884061
         location.setLatitude(32.462516);
         location.setLongitude(-116.821192);
 
@@ -121,7 +206,7 @@ public class MainActivity extends AppCompatActivity{
         longittude = (TextView)this.findViewById(R.id.longitude);
 
         locationTask = new LocationTask();
-        locationTask.execute("https://smart-displays-santy-ruler.c9users.io/Proyecto8B/classes/getLocations.php");
+        locationTask.execute(LoginActivity.URL_SERVER+"classes/getLocations.php");
 
     }
 
@@ -201,7 +286,7 @@ public class MainActivity extends AppCompatActivity{
                     ///error finish activity
                 }
             }catch (JSONException ex){
-                ///error finish activitu
+                ///error finish activity
             }
         }
     }
@@ -209,7 +294,13 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public void onDestroy(){
         super.onDestroy();
-        locationManager = null;
+        try {
+            locationManager.removeUpdates(mLocationListener);
+            locationManager = null;
+        }catch (SecurityException ex){
+            Log.d("Security exception",ex.getMessage());
+        }
+
     }
 
 

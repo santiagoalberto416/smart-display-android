@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <ImageView
+            android:id="@+id/image"
+            android:src="@drawable/ic_location_on_black_48dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tint="@color/colorPrimary"
+            android:layout_margin="16dp" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:textColor="#000"
+            android:textSize="20dp"
+            android:layout_toRightOf="@+id/image"
+            android:text="Hey!!!"/>
+
+        <TextView
+            android:id="@+id/message1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:layout_marginLeft="16dp"
+            android:layout_below="@+id/image"
+            android:text="Tienes un SmartDisplay cerca de ti."/>
+
+        <TextView
+            android:id="@+id/message2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:textColor="@android:color/secondary_text_light"
+            android:layout_marginLeft="16dp"
+            android:layout_below="@id/message1"
+            android:text="Buscanos para encontrar grandiosas promociones."/>
+
+        <Button
+
+            android:layout_centerHorizontal="true"
+            android:id="@+id/dialogButtonOK"
+            android:layout_width="200px"
+            android:layout_height="30dp"
+            android:elevation="30dp"
+            android:background="@drawable/button_location_shape"
+            android:text=" Ok "
+            android:textColor="@color/colorPrimary"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="16dp"
+            android:layout_below="@+id/message2"
+            />
+
+    </RelativeLayout>

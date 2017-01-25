@@ -1,14 +1,10 @@
 package com.skirk.smartdisplay;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,9 +16,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -31,10 +31,10 @@ import com.loopj.android.http.RequestParams;
 import com.skirk.smartdisplay.POJO.UserResponse;
 import com.skirk.smartdisplay.interfaces.UserResponseInterface;
 
-import android.os.Bundle;
-
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cz.msebera.android.httpclient.Header;
 import retrofit2.Call;
@@ -52,71 +52,162 @@ public class RegisterUserActivity extends AppCompatActivity {
     Bitmap bitmap;
     private static int RESULT_LOAD_IMG = 1;
     final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1212;
-    public static final String BASE_URL = "https://smart-displays-santy-ruler.c9users.io/Proyecto8B/classes/";
 
 
-    public AutoCompleteTextView firstName;
-    public AutoCompleteTextView lastName;
+
+    public AutoCompleteTextView editFirstName;
+    public AutoCompleteTextView editLastName;
+    public AutoCompleteTextView editEmail;
+    public AutoCompleteTextView editPassword;
+
+    public String firstname;
+    public String lastname;
+    public String email;
+    public String image;
+    public String password;
+    public int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
         prgDialog = new ProgressDialog(this);
+        insertFlowEditText();
         // Set Cancelable as False
         prgDialog.setCancelable(false);
-
-        firstName = (AutoCompleteTextView)findViewById(R.id.firstName);
-        lastName = (AutoCompleteTextView)findViewById(R.id.lastNameText);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
 
                 ActivityCompat.requestPermissions(RegisterUserActivity.this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-
-
             } else {
 
-                // No explanation needed, we can request the permission.
-
-
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
         }
 
     }
 
-    public void createUser(String firstname, String lastname, String image, String password, String email){
+    public void insertFlowEditText(){
+        editFirstName = (AutoCompleteTextView)findViewById(R.id.firstNameText);
+        editLastName = (AutoCompleteTextView)findViewById(R.id.lastNameText);
+        editEmail = (AutoCompleteTextView)findViewById(R.id.email);
+        editPassword = (AutoCompleteTextView)findViewById(R.id.passwordText);
+
+        editFirstName.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE ||
+                        actionId == EditorInfo.IME_ACTION_NEXT) {
+                    editLastName.requestFocus();
+                    return false;
+                }
+                return false;
+            }
+        });
+        editLastName.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE ||
+                        actionId == EditorInfo.IME_ACTION_NEXT) {
+                    editEmail.requestFocus();
+                    return false;
+                }
+                return false;
+            }
+        });
+        editEmail.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE ||
+                        actionId == EditorInfo.IME_ACTION_NEXT) {
+                    editPassword.requestFocus();
+                    return false;
+                }
+                return false;
+            }
+        });
+        editPassword.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE ||
+                        actionId == EditorInfo.IME_ACTION_NEXT) {
+                    return false;
+                }
+                return false;
+            }
+        });
+    }
+
+    public void checkValues(View view){
+        Boolean success = true;
+        if(editFirstName.getText().length() == 0){
+            editFirstName.setError(getString(R.string.error_invalid_first));
+            editFirstName.requestFocus();
+            success = false;
+        }
+        if(editLastName.getText().length() == 0){
+            editLastName.setError(getString(R.string.error_invalid_last));
+            editLastName.requestFocus();
+            success = false;
+        }
+        if(editEmail.getText().length() == 0 && isEmailValid(editEmail.getText().toString())){
+            editEmail.setError(getString(R.string.error_invalid_email));
+            editEmail.requestFocus();
+            success = false;
+        }
+        if(editPassword.getText().length() == 0){
+            editPassword.setError(getString(R.string.error_incorrect_password));
+            editPassword.requestFocus();
+            success = false;
+        }
+        if(success){
+            firstname = editFirstName.getText().toString();
+            lastname = editLastName.getText().toString();
+            email = editEmail.getText().toString();
+            password = editPassword.getText().toString();
+            createUser();
+        }
+
+
+    }
+
+    public boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+
+    public void createUser(){
+        prgDialog.setMessage("Registering user...");
+        prgDialog.show();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(LoginActivity.URL_SERVER)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         UserResponseInterface apiService =
                 retrofit.create(UserResponseInterface.class);
-        Call<UserResponse> call = apiService.createUser(firstname, lastname, image, password, email);
+        Call<UserResponse> call = apiService.createUser(firstname, lastname, firstname+".png", password, email);
         call.enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-
+                if(response.body().getStatus() == 0) {
+                    id = response.body().getId();
+                    image = response.body().getId() + ".jpg";
+                    params.put("iduser", image);
+                    RegisterUserActivity.this.uploadImage(null);
+                }else if(response.body().getStatus() == 1){
+                    RegisterUserActivity.this.editEmail.setError(getString(R.string.error_user_invalid));
+                }
             }
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-
+                Log.d("response", "fail");
             }
         });
     }
@@ -157,11 +248,6 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     }
 
-
-
-
-
-
     // When Image is selected from Gallery
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -190,7 +276,11 @@ public class RegisterUserActivity extends AppCompatActivity {
                         .decodeFile(imgPath));
                 // Get the Image's file name
                 String fileNameSegments[] = imgPath.split("/");
+
                 fileName = fileNameSegments[fileNameSegments.length - 1];
+                //fileName = image;
+
+
                 // Put file name in Async Http Post Param which will used in Php web app
                 params.put("filename", fileName);
 
@@ -210,15 +300,15 @@ public class RegisterUserActivity extends AppCompatActivity {
         // When Image is selected from Gallery
         if (imgPath != null && !imgPath.isEmpty()) {
             prgDialog.setMessage("Converting Image to Binary Data");
-            prgDialog.show();
+
+
+
             // Convert image to String using Base64
             encodeImagetoString();
             // When Image is not selected from Gallery
         } else {
-            Toast.makeText(
-                    getApplicationContext(),
-                    "You must select image from gallery before you try to upload",
-                    Toast.LENGTH_LONG).show();
+            prgDialog.dismiss();
+            goToMain();
         }
     }
 
@@ -266,7 +356,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         prgDialog.setMessage("Invoking Php");
         AsyncHttpClient client = new AsyncHttpClient();
         // Don't forget to change the IP address to your LAN address. Port no as well.
-        client.post("https://smart-displays-santy-ruler.c9users.io/Android-appis/upload_image.php",
+        client.post(LoginActivity.URL_SERVER+ "upload_image.php",
                 params, new AsyncHttpResponseHandler() {
 
                     @Override
@@ -294,6 +384,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                             String response = new String(responseBody, StandardCharsets.UTF_8);
                             Log.d("Message", responseBody + "");
                         }
+                        goToMain();
                     }
                     // When the response returned by REST has Http
                     // response code '200'
@@ -303,9 +394,20 @@ public class RegisterUserActivity extends AppCompatActivity {
                         prgDialog.hide();
                         Toast.makeText(getApplicationContext(), response,
                                 Toast.LENGTH_LONG).show();
+                        goToMain();
                     }
 
                 });
+    }
+
+    public void goToMain(){
+        Intent intent= new Intent(RegisterUserActivity.this, MainActivity.class);
+        intent.putExtra("idUser", id);
+        intent.putExtra("first", firstname);
+        intent.putExtra("last", lastname);
+        intent.putExtra("image", image);
+        intent.putExtra("email", email);
+        startActivity(intent);
     }
 
     @Override

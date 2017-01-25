@@ -28,7 +28,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile 'com.mikhaellopez:circularimageview:3.0.2'
+    compile 'com.github.nkzawa:socket.io-client:0.3.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
     compile 'com.loopj.android:android-async-http:1.4.9'
